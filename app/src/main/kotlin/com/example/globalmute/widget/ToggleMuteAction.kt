@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.core.content.ContextCompat
 import com.example.globalmute.data.MuteRepository
@@ -29,6 +30,8 @@ class ToggleMuteAction : ActionCallback {
             context.startService(serviceIntent)
         }
 
-        MuteWidget().updateAll(context)
+        GlanceAppWidgetManager(context)
+            .getGlanceIds(MuteWidget::class.java)
+            .forEach { id -> MuteWidget().update(context, id) }
     }
 }

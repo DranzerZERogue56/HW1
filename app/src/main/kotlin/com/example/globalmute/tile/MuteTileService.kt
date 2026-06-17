@@ -8,6 +8,7 @@ import com.example.globalmute.data.MuteRepository
 import com.example.globalmute.service.GlobalMuteService
 import com.example.globalmute.widget.MuteWidget
 import android.content.Intent
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -60,7 +61,9 @@ class MuteTileService : TileService() {
                 startService(serviceIntent)
             }
 
-            MuteWidget().updateAll(applicationContext)
+            GlanceAppWidgetManager(applicationContext)
+                .getGlanceIds(MuteWidget::class.java)
+                .forEach { id -> MuteWidget().update(applicationContext, id) }
         }
     }
 

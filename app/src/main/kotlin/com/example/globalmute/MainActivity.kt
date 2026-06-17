@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.globalmute.data.MuteRepository
 import com.example.globalmute.service.GlobalMuteService
 import com.example.globalmute.ui.theme.GlobalMuteTheme
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.example.globalmute.widget.MuteWidget
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -167,7 +168,9 @@ private fun MainScreen() {
                             } else {
                                 context.startService(serviceIntent)
                             }
-                            MuteWidget().updateAll(context)
+                            GlanceAppWidgetManager(context)
+                                .getGlanceIds(MuteWidget::class.java)
+                                .forEach { id -> MuteWidget().update(context, id) }
                         }
                     },
                 )

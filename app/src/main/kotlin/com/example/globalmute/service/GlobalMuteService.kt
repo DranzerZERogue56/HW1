@@ -16,6 +16,7 @@ import com.example.globalmute.domain.AudioControllerImpl
 import com.example.globalmute.domain.DndControllerImpl
 import com.example.globalmute.domain.MuteLogic
 import com.example.globalmute.widget.MuteWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,7 +58,9 @@ class GlobalMuteService : Service() {
         val snapshot = muteLogic.captureVolumes()
         muteRepository.saveVolumes(snapshot)
         muteLogic.applyMute()
-        MuteWidget().updateAll(applicationContext)
+        GlanceAppWidgetManager(applicationContext)
+            .getGlanceIds(MuteWidget::class.java)
+            .forEach { id -> MuteWidget().update(applicationContext, id) }
     }
 
     private suspend fun handleUnmute() {
@@ -65,7 +68,9 @@ class GlobalMuteService : Service() {
         muteLogic.restoreVolumes(snapshot)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
-        MuteWidget().updateAll(applicationContext)
+        GlanceAppWidgetManager(applicationContext)
+            .getGlanceIds(MuteWidget::class.java)
+            .forEach { id -> MuteWidget().update(applicationContext, id) }
     }
 
     private fun defaultVolumeSnapshot() = com.example.globalmute.data.VolumeSnapshot(
