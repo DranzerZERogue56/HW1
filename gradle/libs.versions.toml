@@ -7,11 +7,13 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 glance = "1.1.1"
 datastore = "1.1.1"
+appcompat = "1.7.0"
 coroutines = "1.9.0"
 junit = "4.13.2"
 mockk = "1.13.13"
 
 [libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
