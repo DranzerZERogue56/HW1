@@ -10,6 +10,8 @@ jobs:
   test-and-build:
     name: Unit Tests + Debug APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -38,8 +40,27 @@ jobs:
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --no-daemon
 
-      - name: Upload debug APK
+      - name: Rename APK
+        run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/GlobalMute-debug.apk
+
+      - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: GlobalMute-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/GlobalMute-debug.apk
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: debug-latest
+          name: "GlobalMute – latest debug build"
+          body: |
+            **Tap `GlobalMute-debug.apk` below to install on your Android device.**
+
+            Built from commit `${{ github.sha }}` on branch `${{ github.ref_name }}`.
+
+            > Enable "Install from unknown sources" in Settings → Apps → your browser/file manager first.
+          files: app/build/outputs/apk/debug/GlobalMute-debug.apk
+          make_latest: true
+          prerelease: true
